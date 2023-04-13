@@ -19,8 +19,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "startCss":"npx tailwindcss -i ./src/App.css -o ./src/input.css --watch",
-    "build": "npx tailwindcss -i ./src/App.css -o ./src/input.css && react-scripts build",
+    "startCss": "npx tailwindcss -i ./src/App.css -o ./src/index.css --watch",
+    "build": "npx tailwindcss -i ./src/App.css -o ./src/index.css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
