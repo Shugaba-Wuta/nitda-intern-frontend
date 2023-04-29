@@ -1,0 +1,10 @@
+{
+    "cSpell.words": [
+        "daygrid"
+    ],
+      "eslint.enable": true,
+  "files.autoSave": "afterDelay",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+
+}
