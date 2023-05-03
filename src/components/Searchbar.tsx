@@ -14,7 +14,7 @@ export const Searchbar = () => {
   const colors = tokens(theme.palette.mode);
   return (
     <Box
-      borderRadius="3px "
+      borderRadius="3px"
       sx={{
         display: "flex",
         mx: "auto",
