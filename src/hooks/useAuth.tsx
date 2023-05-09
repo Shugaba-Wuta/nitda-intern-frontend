@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
+import { IChildren } from "../types";
 
 interface IAuthContext {
   user: string | null;
@@ -14,11 +15,7 @@ const AuthContext = createContext<IAuthContext>({
   logout: async () => {},
 });
 
-export const AuthProvider = ({
-  children,
-}: {
-  children: React.ReactElement;
-}) => {
+export const AuthProvider = ({ children }: IChildren) => {
   const [user, setUser] = useLocalStorage("user", null);
   const navigate = useNavigate();
 
