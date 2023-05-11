@@ -1,38 +1,21 @@
-import {
-  Box,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-  useTheme,
-  Tooltip,
-} from "@mui/material";
-import EmailOutlined from "@mui/icons-material/EmailOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import KeyOutlined from "@mui/icons-material/KeyOutlined";
+import { useState } from "react";
+import { Box, Typography, TextField, useTheme } from "@mui/material";
 import { useTitleChange } from "../hooks/useTitleChange";
 import nitdaHQ from "../components/static/nitda-hq.jpg";
 import nitdaTextLogo from "../components/static/nitda-cropped-logo.png";
 import { tokens } from "../theme";
-import { useState } from "react";
+import { primarySubmitBtnStyle } from "./partials/forms/FieldStyles";
+import { EmailField, OTPField, PasswordField } from "./partials/forms/Login";
 
 const Login = ({ title }: { title: string }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [formType, setFormType] = useState(title);
+  const RESET_PASSWORD = "Reset Password";
+  const LOGIN = "Login";
+  const CHANGE_PASSWORD = "Change Password";
+
   useTitleChange(title);
-  const [passwordHidden, setPasswordHidden] = useState(true);
-  const [passwordTogglable, setPasswordTogglable] = useState(false);
-  const onChangePasswordField = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    let value = e.target.value;
-    if (value.length) {
-      setPasswordTogglable(true);
-    } else {
-      setPasswordTogglable(false);
-    }
-  };
 
   return (
     // Background setup
@@ -40,6 +23,7 @@ const Login = ({ title }: { title: string }) => {
       height={"100vh"}
       width={"100vw"}
       position={"relative"}
+      padding={"0 min(20px, 4rem, 5%)"}
       sx={{
         backgroundImage: `url(${nitdaHQ})`,
         backgroundRepeat: "no-repeat",
@@ -52,8 +36,7 @@ const Login = ({ title }: { title: string }) => {
       {/* Glassmorphism container  */}
       <Box
         sx={{
-          width: "80%",
-          height: "80%",
+          // height: "60%",
           maxWidth: "600px",
           minHeight: "fit-content",
           background: "rgba(255, 255, 255, 0.5)",
@@ -98,109 +81,92 @@ const Login = ({ title }: { title: string }) => {
             flexDirection={"column"}
             justifyContent={"space-evenly"}
           >
-            <TextField
-              required
-              size="small"
-              id="email"
-              label="Email"
-              type="email"
-              variant="standard"
-              placeholder="example@example.com"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailOutlined sx={{ color: colors.gray[100] }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                input: {
-                  color: colors.gray[100],
-                  fontSize: "1.2rem",
-                },
-                "&.MuiTextField-root > label": {
-                  fontSize: "1rem",
-                  color: colors.gray[100],
-                },
-                "&.MuiTextField-root": {
-                  mb: "10px",
-                },
-              }}
-            />
-
-            <TextField
-              required
-              id="password"
-              size="small"
-              label="Password"
-              type={passwordHidden ? "password" : "text"}
-              variant="standard"
-              placeholder="secret"
-              onChange={(e) => {
-                onChangePasswordField(e);
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <KeyOutlined sx={{ color: colors.gray[100] }} />
-                  </InputAdornment>
-                ),
-                // ...(passwordTogglable && {
-                endAdornment: (
-                  <Tooltip title={passwordHidden ? "Show" : "Hide"}>
-                    <IconButton
-                      onClick={(e) => {
-                        setPasswordHidden(!passwordHidden);
-                      }}
-                    >
-                      {passwordHidden ? (
-                        <VisibilityOutlinedIcon />
-                      ) : (
-                        <VisibilityOffOutlinedIcon />
-                      )}
-                    </IconButton>
-                  </Tooltip>
-                ),
-                // }),
-              }}
-              sx={{
-                input: {
-                  color: colors.gray[100],
-                  fontSize: "1.2rem",
-                },
-                "&.MuiTextField-root > label": {
-                  fontSize: "1rem",
-                  color: colors.gray[100],
-                },
-                "&.MuiTextField-root": {
-                  mb: "10px",
-                },
-              }}
-            />
-
-            <TextField
-              type="submit"
-              size="small"
-              value={"Login"}
-              id="submit"
-              sx={{
-                borderRadius: "5px",
-                background: colors.green[200],
-                fontWeight: "bold",
-                width: "fit-content",
-                p: "0px 5px",
-                mx: "auto",
-                color: colors.gray[900],
-                "&.MuiTextField-root": {
-                  fontSize: "2rem",
-                  color: colors.gray[900],
-                },
-                input: {
-                  color: colors.gray[900],
-                  fontWeight: "600",
-                },
-              }}
-            />
+            {formType === CHANGE_PASSWORD && (
+              <OTPField iconColor={colors.gray[100]} />
+            )}
+            {/* Form fields for login/ change password/ reset password */}
+            {[LOGIN, RESET_PASSWORD].includes(formType) && (
+              <EmailField iconColor={colors.gray[100]} />
+            )}
+            {[CHANGE_PASSWORD, LOGIN].includes(formType) && (
+              <PasswordField iconColor={colors.gray[100]} label="Password" />
+            )}
+            {formType === CHANGE_PASSWORD && (
+              <PasswordField
+                iconColor={colors.gray[100]}
+                label="Confirm Password"
+              />
+            )}
+            <Box m="2rem auto 0 auto">
+              <TextField
+                type="submit"
+                size="small"
+                value={formType}
+                id="submit"
+                sx={primarySubmitBtnStyle(colors.green[100], colors.gray[900])}
+              />
+            </Box>
+            {/* Toggle Login, confirm password and Reset Password */}
+            {formType === LOGIN ? (
+              <Typography textAlign={"center"} mt={"2rem"}>
+                Forgot Password?{" "}
+                <Box
+                  component={"a"}
+                  fontStyle={"italic"}
+                  fontWeight={500}
+                  sx={{
+                    ":hover": {
+                      color: colors.green[300],
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={() => {
+                    setFormType(RESET_PASSWORD);
+                  }}
+                >
+                  Click here
+                </Box>
+              </Typography>
+            ) : (
+              <>
+                <Typography textAlign={"center"} m={"3rem 0 0.5rem 0"}>
+                  Return to Login?{" "}
+                  <Box
+                    component={"a"}
+                    fontStyle={"italic"}
+                    fontWeight={500}
+                    sx={{
+                      ":hover": {
+                        color: colors.green[300],
+                        textDecoration: "underline",
+                      },
+                    }}
+                    onClick={() => {
+                      setFormType(LOGIN);
+                    }}
+                  >
+                    Click here
+                  </Box>
+                </Typography>
+                <Typography textAlign={"center"}>
+                  <Box
+                    component={"a"}
+                    fontStyle={"italic"}
+                    sx={{
+                      ":hover": {
+                        color: colors.green[300],
+                        textDecoration: "underline",
+                      },
+                    }}
+                    onClick={() => {
+                      setFormType(CHANGE_PASSWORD);
+                    }}
+                  >
+                    Have password OTP?{" "}
+                  </Box>
+                </Typography>
+              </>
+            )}
           </Box>
         </Box>
       </Box>
