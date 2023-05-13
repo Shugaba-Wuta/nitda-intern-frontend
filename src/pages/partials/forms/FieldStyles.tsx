@@ -2,7 +2,7 @@ export const inputFieldStyle = (color: string) => {
   return {
     input: {
       color,
-      fontSize: "1.2rem",
+      fontSize: "1rem",
     },
     "&.MuiTextField-root > label": {
       fontSize: "1rem",

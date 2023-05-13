@@ -167,16 +167,14 @@ export const ConfirmPasswordChangeForm = (props: {
     email: yup.string().email("Invalid email").required("Email is required"),
     otpCode: yup
       .string()
-
       .min(4, "OTP Code must be between 4 and 6 characters")
       .max(6, "Password must be between 4 and 6 characters")
       .required("OTP Code is required"),
-    password: yup
+    newPassword: yup
       .string()
-
-      .min(6, "Password must be between 6 and 24 characters")
-      .max(24, "Password must be between 6 and 24 characters")
-      .required("Password is required"),
+      .min(6, "New Password must be between 6 and 24 characters")
+      .max(24, "New Password must be between 6 and 24 characters")
+      .required("New Password is required"),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("newPassword")], "Passwords must match"),
