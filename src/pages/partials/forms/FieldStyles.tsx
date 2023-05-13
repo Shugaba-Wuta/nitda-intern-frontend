@@ -22,6 +22,7 @@ export const primarySubmitBtnStyle = (bgColor: string, textColor: string) => {
     width: "fit-content",
     p: "0px 5px",
     mx: "auto",
+    cursor: "pointer !important",
     color: textColor,
     "&.MuiTextField-root": {
       fontSize: "2rem",
@@ -30,6 +31,7 @@ export const primarySubmitBtnStyle = (bgColor: string, textColor: string) => {
     input: {
       color: textColor,
       fontWeight: "600",
+      cursor: "pointer !important",
     },
   };
 };

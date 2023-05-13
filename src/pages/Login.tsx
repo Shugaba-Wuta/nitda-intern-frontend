@@ -1,21 +1,42 @@
 import { useState } from "react";
-import { Box, Typography, TextField, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useTitleChange } from "../hooks/useTitleChange";
 import nitdaHQ from "../components/static/nitda-hq.jpg";
 import nitdaTextLogo from "../components/static/nitda-cropped-logo.png";
 import { tokens } from "../theme";
-import { primarySubmitBtnStyle } from "./partials/forms/FieldStyles";
-import { EmailField, OTPField, PasswordField } from "./partials/forms/Login";
+import {
+  ConfirmPasswordChangeForm,
+  LoginForm,
+  RequestChangePassword,
+} from "./partials/forms/Login";
+
+interface ILoginAllFields {
+  email?: string;
+  password?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+  otpCode?: string;
+}
 
 const Login = ({ title }: { title: string }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [formType, setFormType] = useState(title);
-  const RESET_PASSWORD = "Reset Password";
-  const LOGIN = "Login";
-  const CHANGE_PASSWORD = "Change Password";
+  const [currentFormType, setCurrentFormType] = useState(title);
+
+  const FORM_TYPE = {
+    RESET_PASSWORD: "Reset Password",
+    LOGIN: "Login",
+    CHANGE_PASSWORD: "Change Password",
+  };
 
   useTitleChange(title);
+  const handleLoginFormSubmit = (values: ILoginAllFields) => {
+    if (FORM_TYPE.LOGIN === currentFormType) {
+      console.log("Login");
+    }
+
+    console.log(JSON.stringify(values));
+  };
 
   return (
     // Background setup
@@ -74,100 +95,105 @@ const Login = ({ title }: { title: string }) => {
             Intern Portal
           </Typography>
         </Box>
-        <Box>
-          <Box
-            component={"form"}
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"space-evenly"}
-          >
-            {formType === CHANGE_PASSWORD && (
-              <OTPField iconColor={colors.gray[100]} />
-            )}
-            {/* Form fields for login/ change password/ reset password */}
-            {[LOGIN, RESET_PASSWORD].includes(formType) && (
-              <EmailField iconColor={colors.gray[100]} />
-            )}
-            {[CHANGE_PASSWORD, LOGIN].includes(formType) && (
-              <PasswordField iconColor={colors.gray[100]} label="Password" />
-            )}
-            {formType === CHANGE_PASSWORD && (
-              <PasswordField
-                iconColor={colors.gray[100]}
-                label="Confirm Password"
-              />
-            )}
-            <Box m="2rem auto 0 auto">
-              <TextField
-                type="submit"
-                size="small"
-                value={formType}
-                id="submit"
-                sx={primarySubmitBtnStyle(colors.green[100], colors.gray[900])}
-              />
-            </Box>
-            {/* Toggle Login, confirm password and Reset Password */}
-            {formType === LOGIN ? (
-              <Typography textAlign={"center"} mt={"2rem"}>
-                Forgot Password?{" "}
+        <Box mt={"2rem"}>
+          {/* Form Input and Button */}
+          {currentFormType === FORM_TYPE.LOGIN && (
+            <LoginForm
+              iconColor={colors.gray[100]}
+              textColor={colors.gray[900]}
+              bgColor={colors.green[100]}
+              handleLoginFormSubmit={handleLoginFormSubmit}
+            />
+          )}
+          {currentFormType === FORM_TYPE.CHANGE_PASSWORD && (
+            <ConfirmPasswordChangeForm
+              iconColor={colors.gray[100]}
+              textColor={colors.gray[900]}
+              bgColor={colors.green[100]}
+              handleLoginFormSubmit={handleLoginFormSubmit}
+            />
+          )}
+
+          {currentFormType === FORM_TYPE.RESET_PASSWORD && (
+            <RequestChangePassword
+              iconColor={colors.gray[100]}
+              textColor={colors.gray[900]}
+              bgColor={colors.green[100]}
+              handleLoginFormSubmit={handleLoginFormSubmit}
+            />
+          )}
+        </Box>
+        <Box mt={"4rem"}>
+          {/*  Glassmorphism footer navigation */}
+          {currentFormType === FORM_TYPE.LOGIN && (
+            <Typography>
+              Forgot password?{" "}
+              <Box
+                component={"a"}
+                sx={{
+                  cursor: "pointer",
+                  ":hover": {
+                    color: colors.green[300],
+                  },
+                  fontWeight: 700,
+                  textDecoration: "underline",
+                }}
+                onClick={() => {
+                  setCurrentFormType(FORM_TYPE.RESET_PASSWORD);
+                }}
+              >
+                Click here
+              </Box>
+            </Typography>
+          )}
+
+          {currentFormType !== FORM_TYPE.LOGIN && (
+            <>
+              <Typography>
                 <Box
                   component={"a"}
-                  fontStyle={"italic"}
-                  fontWeight={500}
                   sx={{
+                    cursor: "pointer",
+                    p: "0.25rem",
+                    ":hover": {
+                      color: colors.green[300],
+                      textDecoration: "underline",
+                    },
+                    fontWeight: 500,
+                  }}
+                  onClick={() => {
+                    setCurrentFormType(FORM_TYPE.LOGIN);
+                  }}
+                >
+                  Back to login
+                </Box>
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "0.8rem",
+                  p: "0.25rem",
+                  opacity: 0.75,
+                  fontStyle: "italic",
+                }}
+              >
+                <Box
+                  component={"a"}
+                  sx={{
+                    cursor: "pointer",
                     ":hover": {
                       color: colors.green[300],
                       textDecoration: "underline",
                     },
                   }}
                   onClick={() => {
-                    setFormType(RESET_PASSWORD);
+                    setCurrentFormType(FORM_TYPE.CHANGE_PASSWORD);
                   }}
                 >
-                  Click here
+                  Have OTP Code?
                 </Box>
               </Typography>
-            ) : (
-              <>
-                <Typography textAlign={"center"} m={"3rem 0 0.5rem 0"}>
-                  Return to Login?{" "}
-                  <Box
-                    component={"a"}
-                    fontStyle={"italic"}
-                    fontWeight={500}
-                    sx={{
-                      ":hover": {
-                        color: colors.green[300],
-                        textDecoration: "underline",
-                      },
-                    }}
-                    onClick={() => {
-                      setFormType(LOGIN);
-                    }}
-                  >
-                    Click here
-                  </Box>
-                </Typography>
-                <Typography textAlign={"center"}>
-                  <Box
-                    component={"a"}
-                    fontStyle={"italic"}
-                    sx={{
-                      ":hover": {
-                        color: colors.green[300],
-                        textDecoration: "underline",
-                      },
-                    }}
-                    onClick={() => {
-                      setFormType(CHANGE_PASSWORD);
-                    }}
-                  >
-                    Have password OTP?{" "}
-                  </Box>
-                </Typography>
-              </>
-            )}
-          </Box>
+            </>
+          )}
         </Box>
       </Box>
     </Box>
