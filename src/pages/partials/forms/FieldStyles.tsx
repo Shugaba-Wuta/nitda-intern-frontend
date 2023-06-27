@@ -28,6 +28,10 @@ export const primarySubmitBtnStyle = (bgColor: string, textColor: string) => {
       fontSize: "2rem",
       color: textColor,
     },
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none"
+    },
+
     input: {
       color: textColor,
       fontWeight: "600",
